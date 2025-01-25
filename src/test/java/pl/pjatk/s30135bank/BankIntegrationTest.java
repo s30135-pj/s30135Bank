@@ -46,7 +46,7 @@ public class BankIntegrationTest {
         when(clientStorage.getById(1)).thenReturn(Optional.empty());
 
         Deposit deposit = transactionService.createDeposit(50.00, 1);
-        
+
         assertThat(deposit.getStatus()).isEqualTo(Status.DECLINED);
     }
 

@@ -44,4 +44,13 @@ public class ClientService {
     public void addBalance(Client client, double amount) {
         client.setBalance(client.getBalance() + amount);
     }
+
+    public String getClientData(int id) {
+        Optional<Client> client = clientStorage.getById(id);
+        if (client.isEmpty()) {
+            return "Nie znaleziono klienta o podanym id.";
+        } else {
+            return client.get().toString();
+        }
+    }
 }

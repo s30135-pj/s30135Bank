@@ -18,4 +18,10 @@ public class Client extends BaseEntity {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
+
+    @Override
+    public String toString() {
+        return "Client id: " + getId() + ", balance: " + balance;
+    }
 }
