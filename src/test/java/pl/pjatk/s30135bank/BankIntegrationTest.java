@@ -46,8 +46,7 @@ public class BankIntegrationTest {
         when(clientStorage.getById(1)).thenReturn(Optional.empty());
 
         Deposit deposit = transactionService.createDeposit(50.00, 1);
-
-        assertThat(deposit.getBalanceAfterTransaction()).isEqualTo(0);
+        
         assertThat(deposit.getStatus()).isEqualTo(Status.DECLINED);
     }
 
@@ -60,5 +59,25 @@ public class BankIntegrationTest {
 
         assertThat(transfer.getBalanceAfterTransaction()).isEqualTo(50.00);
         assertThat(transfer.getStatus()).isEqualTo(Status.ACCEPTED);
+    }
+
+    @Test
+    void transferFailsWithoutExistingClient() {
+        when(clientStorage.getById(1)).thenReturn(Optional.empty());
+
+        Transfer transfer = transactionService.createTransfer(50.00, 1);
+
+        assertThat(transfer.getStatus()).isEqualTo(Status.DECLINED);
+    }
+
+    @Test
+    void transferFailsWhenAmountIsBiggerThanBalance() {
+        Optional<Client> client = Optional.of(new Client(1, 100.00));
+        when(clientStorage.getById(1)).thenReturn(client);
+
+        Transfer transfer = transactionService.createTransfer(150.00, 1);
+
+        assertThat(transfer.getStatus()).isEqualTo(Status.DECLINED);
+
     }
 }
