@@ -25,7 +25,7 @@ public class ClientService {
     }
 
     public Optional<Client> getClientById(int id) {
-        if (clientStorage.getById(id).isPresent()) {
+        if (clientStorage.getById(id).isEmpty()) {
             System.out.println("Nie znaleziono klienta o podanym id.");
         }
         return clientStorage.getById(id);
