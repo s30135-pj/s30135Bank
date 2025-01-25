@@ -4,9 +4,8 @@ public class Deposit extends Transaction {
 
     private Client target;
 
-    public Deposit(int id, Status status, Client target, double amount) {
+    public Deposit(int id, Status status, double amount) {
         super(id, status, amount);
-        this.target = target;
     }
 
     public Client getTarget() {
@@ -16,4 +15,5 @@ public class Deposit extends Transaction {
     public void setTarget(Client target) {
         this.target = target;
     }
+
 }

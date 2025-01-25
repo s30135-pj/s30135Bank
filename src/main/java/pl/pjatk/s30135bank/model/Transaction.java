@@ -4,6 +4,7 @@ public class Transaction extends BaseEntity {
 
     private Status status;
     private double amount;
+    private double balanceAfterTransaction;
 
     public Transaction(int id, Status status, double amount) {
         super(id);
@@ -25,5 +26,13 @@ public class Transaction extends BaseEntity {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public void setBalanceAfterTransaction(double balanceAfterTransaction) {
+        this.balanceAfterTransaction = balanceAfterTransaction;
+    }
+
+    public double getBalanceAfterTransaction() {
+        return balanceAfterTransaction;
     }
 }

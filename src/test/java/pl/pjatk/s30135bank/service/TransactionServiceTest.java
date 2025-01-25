@@ -41,4 +41,14 @@ class TransactionServiceTest {
         verify(transactionStorage).save(transaction);
         assertThat(transaction.getStatus()).isEqualTo(Status.ACCEPTED);
     }
+
+    @Test
+    void createNewDepositForExistingClient() {
+        Optional<Client> client = Optional.of(new Client(1, 100.00));
+        when(clientService.getClientById(1)).thenReturn(client);
+        Transaction transaction = transactionService.createDeposit(50.00, 1);
+
+        verify(transactionStorage).save(transaction);
+        assertThat(transaction.getStatus()).isEqualTo(Status.ACCEPTED);
+    }
 }

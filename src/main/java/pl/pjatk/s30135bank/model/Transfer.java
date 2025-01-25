@@ -19,4 +19,5 @@ public class Transfer extends Transaction {
     public String getType() {
         return "Przelew";
     }
+
 }

@@ -2,6 +2,7 @@ package pl.pjatk.s30135bank.service;
 
 import org.springframework.stereotype.Component;
 import pl.pjatk.s30135bank.model.Client;
+import pl.pjatk.s30135bank.model.Deposit;
 import pl.pjatk.s30135bank.model.Status;
 import pl.pjatk.s30135bank.model.Transfer;
 import pl.pjatk.s30135bank.storage.TransactionStorage;
@@ -28,6 +29,7 @@ public class TransactionService {
             Boolean success = clientService.reduceBalance(client, amount);
             if (success) {
                 transfer.setClient(client);
+                transfer.setBalanceAfterTransaction(client.getBalance());
                 transfer.setStatus(Status.ACCEPTED);
             } else {
                 transfer.setStatus(Status.DECLINED);
@@ -37,5 +39,21 @@ public class TransactionService {
         }
         transactionStorage.save(transfer);
         return transfer;
+    }
+
+    public Deposit createDeposit(double amount, int clientId) {
+        int id = transactionStorage.getMaxId() + 1;
+        Deposit deposit = new Deposit(id, Status.PENDING, amount);
+        Optional<Client> optionalClient = clientService.getClientById(clientId);
+        if (optionalClient.isPresent()) {
+            Client client = optionalClient.get();
+            clientService.addBalance(client, amount);
+            deposit.setBalanceAfterTransaction(client.getBalance());
+            deposit.setStatus(Status.ACCEPTED);
+        } else {
+            deposit.setStatus(Status.DECLINED);
+        }
+        transactionStorage.save(deposit);
+        return deposit;
     }
 }

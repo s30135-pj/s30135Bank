@@ -22,6 +22,9 @@ public class ClientService {
     }
 
     public Optional<Client> getClientById(int id) {
+        if (clientStorage.getById(id).isPresent()) {
+            System.out.println("Nie znaleziono klienta o podanym id.");
+        }
         return clientStorage.getById(id);
     }
 
@@ -30,7 +33,12 @@ public class ClientService {
             client.setBalance(client.getBalance() - amount);
             return true;
         } else {
+            System.out.println("Nie ma wystarczająco środków.");
             return false;
         }
+    }
+
+    public void addBalance(Client client, double amount) {
+        client.setBalance(client.getBalance() + amount);
     }
 }
