@@ -14,6 +14,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,9 +35,10 @@ class TransactionServiceTest {
     void createNewTransactionForExistingClient() {
         Optional<Client> client = Optional.of(new Client(1, 100.00));
         when(clientService.getClientById(1)).thenReturn(client);
-
+        when(clientService.reduceBalance(any(), anyDouble())).thenReturn(true);
         Transaction transaction = transactionService.createTransfer(50.00, 1);
 
+        verify(transactionStorage).save(transaction);
         assertThat(transaction.getStatus()).isEqualTo(Status.ACCEPTED);
     }
 }

@@ -25,9 +25,13 @@ public class TransactionService {
         Optional<Client> optionalClient = clientService.getClientById(clientId);
         if (optionalClient.isPresent()) {
             Client client = optionalClient.get();
-            clientService.reduceBalance(client, amount);
-            transfer.setClient(client);
-            transfer.setStatus(Status.ACCEPTED);
+            Boolean success = clientService.reduceBalance(client, amount);
+            if (success) {
+                transfer.setClient(client);
+                transfer.setStatus(Status.ACCEPTED);
+            } else {
+                transfer.setStatus(Status.DECLINED);
+            }
         } else {
             transfer.setStatus(Status.DECLINED);
         }

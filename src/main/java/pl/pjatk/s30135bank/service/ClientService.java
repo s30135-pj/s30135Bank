@@ -25,7 +25,12 @@ public class ClientService {
         return clientStorage.getById(id);
     }
 
-    public void reduceBalance(Client client, double amount) {
-        client.setBalance(client.getBalance() - amount);
+    public Boolean reduceBalance(Client client, double amount) {
+        if (client.getBalance() > amount) {
+            client.setBalance(client.getBalance() - amount);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
