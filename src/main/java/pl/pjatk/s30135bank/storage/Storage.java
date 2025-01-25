@@ -16,5 +16,7 @@ public abstract class Storage<T extends BaseEntity> {
         getList().add(obj);
     }
 
-
+    public int getMaxId() {
+        return getList().stream().mapToInt(BaseEntity::getId).max().orElse(0);
+    }
 }

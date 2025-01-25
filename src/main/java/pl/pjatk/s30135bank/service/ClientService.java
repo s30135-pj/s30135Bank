@@ -1,4 +1,21 @@
 package pl.pjatk.s30135bank.service;
 
+import org.springframework.stereotype.Component;
+import pl.pjatk.s30135bank.model.Client;
+import pl.pjatk.s30135bank.storage.ClientStorage;
+
+@Component
 public class ClientService {
+
+    private final ClientStorage clientStorage;
+
+    public ClientService(ClientStorage clientStorage) {
+        this.clientStorage = clientStorage;
+    }
+
+    public void registerClient(double startingBalance) {
+        int id = clientStorage.getMaxId() + 1;
+        Client client = new Client(id, startingBalance);
+        clientStorage.save(client);
+    }
 }
