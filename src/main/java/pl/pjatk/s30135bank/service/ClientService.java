@@ -15,7 +15,10 @@ public class ClientService {
         this.clientStorage = clientStorage;
     }
 
-    public void registerClient(double startingBalance) {
+    public void registerClient(double startingBalance) throws IllegalArgumentException {
+        if (startingBalance < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative");
+        }
         int id = clientStorage.getMaxId() + 1;
         Client client = new Client(id, startingBalance);
         clientStorage.save(client);
@@ -29,7 +32,7 @@ public class ClientService {
     }
 
     public Boolean reduceBalance(Client client, double amount) {
-        if (client.getBalance() > amount) {
+        if (client.getBalance() >= amount) {
             client.setBalance(client.getBalance() - amount);
             return true;
         } else {

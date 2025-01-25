@@ -13,11 +13,10 @@ import pl.pjatk.s30135bank.storage.TransactionStorage;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceTest {
@@ -50,5 +49,50 @@ class TransactionServiceTest {
 
         verify(transactionStorage).save(transaction);
         assertThat(transaction.getStatus()).isEqualTo(Status.ACCEPTED);
+    }
+
+    @Test
+    void createNewTransactionForNonExistingClient() {
+        when(clientService.getClientById(1)).thenReturn(Optional.empty());
+        Transaction transaction = transactionService.createTransfer(50.00, 1);
+
+        verify(transactionStorage).save(transaction);
+        assertThat(transaction.getStatus()).isEqualTo(Status.DECLINED);
+    }
+
+    @Test
+    void createNewDepositForNonExistingClient() {
+        when(clientService.getClientById(1)).thenReturn(Optional.empty());
+        Transaction transaction = transactionService.createDeposit(50.00, 1);
+
+        verify(transactionStorage).save(transaction);
+        assertThat(transaction.getStatus()).isEqualTo(Status.DECLINED);
+    }
+
+    @Test
+    void createNewDepositWithNegativeAmountThrowsError() {
+        assertThatThrownBy(
+                () -> transactionService.createTransfer(-50.00, 1)
+        ).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void createNewTransferWithNegativeAmountThrowsError() {
+        assertThatThrownBy(
+                () -> transactionService.createTransfer(-50.00, 1)
+        ).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void createNewDepositWithZeroBalanceThrowsError() {
+        assertThatThrownBy(
+                () -> transactionService.createTransfer(0.00, 1)
+        ).isInstanceOf(IllegalArgumentException.class);
+    }
+    @Test
+    void createNewTransferWithZeroBalanceThrowsError() {
+        assertThatThrownBy(
+                () -> transactionService.createTransfer(0.00, 1)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 }

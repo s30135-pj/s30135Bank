@@ -21,6 +21,9 @@ public class TransactionService {
     }
 
     public Transfer createTransfer(double amount, int clientId) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        }
         int id = transactionStorage.getMaxId() + 1;
         Transfer transfer = new Transfer(id, Status.PENDING, amount);
         Optional<Client> optionalClient = clientService.getClientById(clientId);
@@ -42,6 +45,9 @@ public class TransactionService {
     }
 
     public Deposit createDeposit(double amount, int clientId) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        }
         int id = transactionStorage.getMaxId() + 1;
         Deposit deposit = new Deposit(id, Status.PENDING, amount);
         Optional<Client> optionalClient = clientService.getClientById(clientId);
