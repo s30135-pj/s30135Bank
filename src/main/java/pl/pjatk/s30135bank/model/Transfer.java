@@ -4,9 +4,8 @@ public class Transfer extends Transaction {
 
     private Client client;
 
-    public Transfer(int id, Status status, double amount, Client client) {
+    public Transfer(int id, Status status, double amount) {
         super(id, status, amount);
-        this.client = client;
     }
 
     public Client getClient() {
